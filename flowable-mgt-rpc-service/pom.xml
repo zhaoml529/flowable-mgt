@@ -12,5 +12,17 @@
     <artifactId>flowable-mgt-rpc-service</artifactId>
     <version>1.0-SNAPSHOT</version>
 
+    <dependencies>
+        <dependency>
+            <groupId>com.vk.zml</groupId>
+            <artifactId>flowable-mgt-rpc-api</artifactId>
+            <version>1.0-SNAPSHOT</version>
+        </dependency>
 
+        <dependency>
+            <groupId>com.vk.zml</groupId>
+            <artifactId>flowable-mgt-service</artifactId>
+            <version>1.0-SNAPSHOT</version>
+        </dependency>
+    </dependencies>
 </project>

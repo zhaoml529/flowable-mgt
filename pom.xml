@@ -13,7 +13,6 @@
         <module>flowable-mgt-service</module>
         <module>flowable-mgt-rpc-api</module>
         <module>flowable-mgt-rpc-service</module>
-        <module>flowable-mgt-admin</module>
     </modules>
 
     <properties>
