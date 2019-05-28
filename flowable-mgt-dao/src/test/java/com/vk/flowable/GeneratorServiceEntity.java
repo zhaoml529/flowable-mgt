@@ -19,7 +19,7 @@ public class GeneratorServiceEntity {
 
     private void generateByTables(String packageName, String... tableNames) {
         GlobalConfig config = new GlobalConfig();
-        String dbUrl = "jdbc:mysql://localhost:3306/flowable";
+        String dbUrl = "jdbc:mysql://localhost:3306/flowable-mgt";
         DataSourceConfig dataSourceConfig = new DataSourceConfig();
         dataSourceConfig.setDbType(DbType.MYSQL)
                 .setUrl(dbUrl)

@@ -40,4 +40,5 @@ public class MybatisPlusConfig {
     public ISqlInjector sqlInjector() {
         return new LogicSqlInjector();
     }
+
 }
