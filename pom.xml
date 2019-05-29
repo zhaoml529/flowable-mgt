@@ -15,6 +15,7 @@
         <module>flowable-mgt-rpc-service</module>
         <module>flowable-mgt-admin</module>
         <module>flowable-mgt-dao</module>
+        <module>flowable-mgt-common</module>
     </modules>
 
     <properties>
@@ -111,6 +112,11 @@
                 <groupId>com.alibaba</groupId>
                 <artifactId>fastjson</artifactId>
                 <version>${fastjson.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>net.sf.dozer</groupId>
+                <artifactId>dozer</artifactId>
+                <version>${dozer.version}</version>
             </dependency>
             <dependency>
                 <groupId>org.flowable</groupId>

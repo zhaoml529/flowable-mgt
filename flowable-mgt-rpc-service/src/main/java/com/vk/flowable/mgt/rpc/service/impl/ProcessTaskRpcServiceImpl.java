@@ -1,7 +1,9 @@
 package com.vk.flowable.mgt.rpc.service.impl;
 
+import com.vk.flowable.common.utils.BeanMapper;
 import com.vk.flowable.mgt.domain.ProcessTask;
 import com.vk.flowable.mgt.rpc.api.response.ApiResponse;
+import com.vk.flowable.mgt.rpc.api.response.ApiResponseBuilder;
 import com.vk.flowable.mgt.rpc.api.response.ProcessTaskDTO;
 import com.vk.flowable.mgt.rpc.api.service.ProcessTaskRpcService;
 import com.vk.flowable.mgt.service.ProcessTaskService;
@@ -24,7 +26,12 @@ public class ProcessTaskRpcServiceImpl implements ProcessTaskRpcService {
     @Override
     public ApiResponse<List<ProcessTaskDTO>> findTodoTask(Long userId, Integer limit, Integer offset) {
         List<ProcessTask> list = processTaskService.findTodoTask(userId, limit, offset);
+        List<ProcessTaskDTO> dtoList = BeanMapper.mapList(list, ProcessTaskDTO.class);
+        return ApiResponseBuilder.buildSuccess(dtoList);
+    }
 
+    @Override
+    public ApiResponse claimTask(Long userId, String taskId) {
         return null;
     }
 }

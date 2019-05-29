@@ -1,10 +1,13 @@
 package com.vk.flowable.mgt.service.impl;
 
 import com.google.common.collect.Lists;
+import com.vk.flowable.common.enums.ResponseCode;
+import com.vk.flowable.common.exception.BizException;
 import com.vk.flowable.mgt.domain.ProcessTask;
 import com.vk.flowable.mgt.service.ProcessTaskService;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
+import org.flowable.engine.IdentityService;
 import org.flowable.engine.RepositoryService;
 import org.flowable.engine.RuntimeService;
 import org.flowable.engine.TaskService;
@@ -37,6 +40,9 @@ public class ProcessTaskServiceImpl implements ProcessTaskService {
     @Autowired
     private RepositoryService repositoryService;
 
+    @Autowired
+    private IdentityService identityService;
+
     @Override
     public List<ProcessTask> findTodoTask(Long userId, Integer limit, Integer offset) {
         TaskQuery taskQuery = taskService.createTaskQuery().taskCandidateOrAssigned(userId.toString());
@@ -67,6 +73,43 @@ public class ProcessTaskServiceImpl implements ProcessTaskService {
             taskList.add(processTask);
         });
         return taskList;
+    }
+
+    @Override
+    public void claimTask(Long userId, String taskId) {
+        if(Objects.isNull(userId) || StringUtils.isBlank(taskId)) {
+            return;
+        }
+        identityService.setAuthenticatedUserId(userId.toString());
+        taskService.claim(taskId, userId.toString());
+        log.info("签收任务成功，userId:{}, taskId:{}", userId, taskId);
+    }
+
+    @Override
+    public void delegateTask(Long userId, String taskId) {
+        if(Objects.isNull(userId) || StringUtils.isBlank(taskId)) {
+            return;
+        }
+        //API: If no owner is set on the task, the owner is set to the current assignee of the task.
+        //OWNER_（委托人）：受理人委托其他人操作该TASK的时候，受理人就成了委托人OWNER_，其他人就成了受理人ASSIGNEE_
+        //assignee容易理解，主要是owner字段容易误解，owner字段就是用于受理人委托别人操作的时候运用的字段
+        taskService.delegateTask(taskId, userId.toString());
+        log.info("委派任务成功，userId:{}, taskId:{}", userId, taskId);
+    }
+
+    @Override
+    public void transferTask(Long userId, String taskId) {
+        if(Objects.isNull(userId) || StringUtils.isBlank(taskId)) {
+            return;
+        }
+        Task task = taskService.createTaskQuery().taskId(taskId).singleResult();
+        if(Objects.isNull(task)) {
+            throw new BizException(ResponseCode.ERROR.code, "当前任务不存在");
+        }
+        String assign = task.getAssignee(); // 当前任务原受理人
+        taskService.setAssignee(taskId, userId.toString()); // 给任务设置新的受理人
+        taskService.setOwner(taskId, assign);// 设置当前任务的委托人
+        log.info("签收任务成功，userId:{}, taskId:{}", userId, taskId);
     }
 
     private ProcessDefinition getProcessDefinition(String processDefinitionId) {

@@ -11,4 +11,6 @@ import java.util.List;
 public interface ProcessTaskRpcService {
 
     ApiResponse<List<ProcessTaskDTO>> findTodoTask(Long userId, Integer limit, Integer offset);
+
+    ApiResponse claimTask(Long userId, String taskId);
 }

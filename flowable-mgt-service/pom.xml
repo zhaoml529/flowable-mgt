@@ -18,9 +18,11 @@
             <artifactId>flowable-mgt-domain</artifactId>
             <version>1.0-SNAPSHOT</version>
         </dependency>
+
         <dependency>
-            <groupId>com.google.guava</groupId>
-            <artifactId>guava</artifactId>
+            <groupId>com.vk.zml</groupId>
+            <artifactId>flowable-mgt-common</artifactId>
+            <version>1.0-SNAPSHOT</version>
         </dependency>
     </dependencies>
 </project>
