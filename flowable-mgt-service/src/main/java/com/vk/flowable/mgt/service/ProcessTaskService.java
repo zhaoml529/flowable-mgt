@@ -19,21 +19,31 @@ public interface ProcessTaskService {
      * @param offset
      * @return
      */
-    List<ProcessTask> findTodoTask(Long userId, Integer limit, Integer offset);
+    List<ProcessTask> getTodoTask(Long userId, Integer limit, Integer offset);
 
     /**
      * 根据id查询任务信息
      * @param taskId
      * @return
      */
-    Task findTaskById(String taskId);
+    Task getTaskById(String taskId);
 
     /**
      * 根据processInstanceId查询任务
      * @param processInstanceId
      * @return
      */
-    Task findTaskByProcessInstanceId(String processInstanceId);
+    Task getTaskByProcessInstanceId(String processInstanceId);
+
+    /**
+     * 启动任务
+     * @param userId
+     * @param processDefinitionId
+     * @param businessKey
+     * @param variables
+     * @return processInstanceId
+     */
+    String startTask(Long userId, String processDefinitionId, String businessKey, Map<String, Object> variables);
 
     /**
      * 签收任务

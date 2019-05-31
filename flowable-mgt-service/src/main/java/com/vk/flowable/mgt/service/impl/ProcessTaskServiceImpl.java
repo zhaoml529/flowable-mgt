@@ -51,7 +51,7 @@ public class ProcessTaskServiceImpl implements ProcessTaskService {
     private IdentityService identityService;
 
     @Override
-    public List<ProcessTask> findTodoTask(Long userId, Integer limit, Integer offset) {
+    public List<ProcessTask> getTodoTask(Long userId, Integer limit, Integer offset) {
         TaskQuery taskQuery = taskService.createTaskQuery().taskCandidateOrAssigned(userId.toString());
         List<Task> list = taskQuery.orderByTaskCreateTime().desc().listPage(limit, offset);
         if(CollectionUtils.isEmpty(list)) {
@@ -83,7 +83,7 @@ public class ProcessTaskServiceImpl implements ProcessTaskService {
     }
 
     @Override
-    public Task findTaskById(String taskId) {
+    public Task getTaskById(String taskId) {
         if(StringUtils.isBlank(taskId)) {
             return null;
         }
@@ -92,12 +92,21 @@ public class ProcessTaskServiceImpl implements ProcessTaskService {
     }
 
     @Override
-    public Task findTaskByProcessInstanceId(String processInstanceId) {
+    public Task getTaskByProcessInstanceId(String processInstanceId) {
         if(StringUtils.isBlank(processInstanceId)) {
             return null;
         }
         Task task = taskService.createTaskQuery().processInstanceId(processInstanceId).singleResult();
         return task;
+    }
+
+    @Override
+    public String startTask(Long userId, String processDefinitionId, String businessKey, Map<String, Object> variables) {
+        // 这个方法最终使用一个ThreadLocal类型的变量进行存储，也就是与当前的线程绑定，所以流程实例启动完毕之后，需要设置为null，防止多线程的时候出问题。
+        Authentication.setAuthenticatedUserId(userId.toString());
+        ProcessInstance processInstance = runtimeService.startProcessInstanceByKey(processDefinitionId, businessKey, variables);
+        Authentication.setAuthenticatedUserId(null);
+        return processInstance.getId();
     }
 
     @Override
@@ -117,9 +126,10 @@ public class ProcessTaskServiceImpl implements ProcessTaskService {
         if(Objects.isNull(userId) || StringUtils.isBlank(taskId)) {
             return;
         }
-        //API: If no owner is set on the task, the owner is set to the current assignee of the task.
-        //OWNER_（委托人）：受理人委托其他人操作该TASK的时候，受理人就成了委托人OWNER_，其他人就成了受理人ASSIGNEE_
-        //assignee容易理解，主要是owner字段容易误解，owner字段就是用于受理人委托别人操作的时候运用的字段
+        // API: If no owner is set on the task, the owner is set to the current assignee of the task.
+        // OWNER_（委托人）：受理人委托其他人操作该TASK的时候，受理人就成了委托人OWNER_，其他人就成了受理人ASSIGNEE_
+        // assignee容易理解，主要是owner字段容易误解，owner字段就是用于受理人委托别人操作的时候运用的字段
+        // 一句话解释委派任务：你领导接到一个任务，让你代办，你办理完成后任务还是回归到你的领导，事情是你做的，功劳是你领导的；
         taskService.delegateTask(taskId, userId.toString());
         log.info("委派任务成功，userId:{}, taskId:{}", userId, taskId);
     }
@@ -129,7 +139,7 @@ public class ProcessTaskServiceImpl implements ProcessTaskService {
         if(Objects.isNull(userId) || StringUtils.isBlank(taskId)) {
             return;
         }
-        Task task = findTaskById(taskId);
+        Task task = getTaskById(taskId);
         if(Objects.isNull(task)) {
             throw new BizException(ResponseCode.ERROR.code, "当前任务不存在");
         }
@@ -147,7 +157,7 @@ public class ProcessTaskServiceImpl implements ProcessTaskService {
         if(Objects.isNull(userId)) {
             throw new BizException("userId不能为空");
         }
-        Task task = findTaskById(taskId);
+        Task task = getTaskById(taskId);
         if(Objects.isNull(task)) {
             throw new BizException("当前任务不存在");
         }
@@ -169,8 +179,8 @@ public class ProcessTaskServiceImpl implements ProcessTaskService {
 
     @Override
     public void revokeTask(String historyTaskId, String processInstanceId) {
-        Task oldTask = findTaskById(historyTaskId);
-        Task currentTask = findTaskByProcessInstanceId(processInstanceId);
+        Task oldTask = getTaskById(historyTaskId);
+        Task currentTask = getTaskByProcessInstanceId(processInstanceId);
         if(Objects.isNull(currentTask)) {
             throw new BizException("当前任务不存在");
         }
@@ -184,7 +194,7 @@ public class ProcessTaskServiceImpl implements ProcessTaskService {
 
     @Override
     public void moveTo(String currentTaskId, String targetTaskDefinitionKey) {
-        Task task = findTaskById(currentTaskId);
+        Task task = getTaskById(currentTaskId);
         if(Objects.isNull(task)) {
             throw new BizException("当前任务不存在");
         }
