@@ -1,4 +1,4 @@
-package com.vk.flowable.mgt.rpc.api.response;
+package com.vk.flowable.mgt.rpc.api.dto;
 
 import java.io.Serializable;
 import java.util.Date;

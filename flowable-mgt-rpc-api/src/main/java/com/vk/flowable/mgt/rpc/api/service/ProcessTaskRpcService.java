@@ -1,7 +1,7 @@
 package com.vk.flowable.mgt.rpc.api.service;
 
 import com.vk.flowable.mgt.rpc.api.response.ApiResponse;
-import com.vk.flowable.mgt.rpc.api.response.ProcessTaskDTO;
+import com.vk.flowable.mgt.rpc.api.dto.ProcessTaskDTO;
 
 import java.util.List;
 

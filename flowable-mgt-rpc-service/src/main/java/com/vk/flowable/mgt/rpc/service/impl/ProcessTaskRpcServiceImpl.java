@@ -4,7 +4,7 @@ import com.vk.flowable.common.utils.BeanMapper;
 import com.vk.flowable.mgt.domain.ProcessTask;
 import com.vk.flowable.mgt.rpc.api.response.ApiResponse;
 import com.vk.flowable.mgt.rpc.api.response.ApiResponseBuilder;
-import com.vk.flowable.mgt.rpc.api.response.ProcessTaskDTO;
+import com.vk.flowable.mgt.rpc.api.dto.ProcessTaskDTO;
 import com.vk.flowable.mgt.rpc.api.service.ProcessTaskRpcService;
 import com.vk.flowable.mgt.service.ProcessTaskService;
 import lombok.extern.slf4j.Slf4j;

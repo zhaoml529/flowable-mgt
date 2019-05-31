@@ -1,8 +1,11 @@
 package com.vk.flowable.mgt.service;
 
+import com.vk.flowable.mgt.domain.CommentInfo;
 import com.vk.flowable.mgt.domain.ProcessTask;
+import org.flowable.task.api.Task;
 
 import java.util.List;
+import java.util.Map;
 
 /**
  * Created by zml on 2019/5/16.
@@ -17,6 +20,20 @@ public interface ProcessTaskService {
      * @return
      */
     List<ProcessTask> findTodoTask(Long userId, Integer limit, Integer offset);
+
+    /**
+     * 根据id查询任务信息
+     * @param taskId
+     * @return
+     */
+    Task findTaskById(String taskId);
+
+    /**
+     * 根据processInstanceId查询任务
+     * @param processInstanceId
+     * @return
+     */
+    Task findTaskByProcessInstanceId(String processInstanceId);
 
     /**
      * 签收任务
@@ -39,5 +56,36 @@ public interface ProcessTaskService {
      * @param taskId
      */
     void transferTask(Long userId, String taskId);
+
+    /**
+     * 完成任务
+     * @param taskId
+     * @param comment
+     * @param userId
+     * @param variables
+     */
+    void completeTask(String taskId, String comment, Long userId, Map<String, Object> variables);
+
+    /**
+     * 撤回任务
+     * @param historyTaskId
+     * @param processInstanceId
+     * @return
+     */
+    void revokeTask(String historyTaskId, String processInstanceId);
+
+    /**
+     * 跳转（包括回退和向前）至指定活动节点
+     * @param currentTaskId
+     * @param targetTaskDefinitionKey
+     */
+    void moveTo(String currentTaskId, String targetTaskDefinitionKey);
+
+    /**
+     * 根据processInstanceId查询评论信息
+     * @param processInstanceId
+     * @return
+     */
+    List<CommentInfo> findComments(String processInstanceId);
 
 }
