@@ -9,6 +9,7 @@ import com.vk.flowable.mgt.service.ProcessInfoService;
 import com.vk.flowable.mgt.service.ProcessTaskService;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
+import org.flowable.common.engine.impl.identity.Authentication;
 import org.flowable.engine.IdentityService;
 import org.flowable.engine.RuntimeService;
 import org.flowable.engine.TaskService;
@@ -104,8 +105,10 @@ public class ProcessTaskServiceImpl implements ProcessTaskService {
         if(Objects.isNull(userId) || StringUtils.isBlank(taskId)) {
             return;
         }
-        identityService.setAuthenticatedUserId(userId.toString());
+        // 这个方法最终使用一个ThreadLocal类型的变量进行存储，也就是与当前的线程绑定，所以流程实例启动完毕之后，需要设置为null，防止多线程的时候出问题。
+        Authentication.setAuthenticatedUserId(userId.toString());
         taskService.claim(taskId, userId.toString());
+        Authentication.setAuthenticatedUserId(null);
         log.info("签收任务成功，userId:{}, taskId:{}", userId, taskId);
     }
 

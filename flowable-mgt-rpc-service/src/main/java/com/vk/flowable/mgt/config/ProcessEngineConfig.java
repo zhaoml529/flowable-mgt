@@ -20,8 +20,7 @@ public class ProcessEngineConfig {
 
     @Bean
     public ProcessEngineConfiguration configuration() {
-
-        ProcessEngineConfiguration processEngineConfiguration = new StandaloneProcessEngineConfiguration();
+        ProcessEngineConfiguration processEngineConfiguration = ProcessEngineConfiguration.createStandaloneProcessEngineConfiguration();
         processEngineConfiguration.setDataSource(dataSource);
         processEngineConfiguration.setDatabaseSchemaUpdate(ProcessEngineConfiguration.DB_SCHEMA_UPDATE_TRUE);
         processEngineConfiguration.setCreateDiagramOnDeploy(true);  // 流程发布时生成流程图
@@ -33,8 +32,4 @@ public class ProcessEngineConfig {
         return processEngineConfiguration;
     }
 
-    /*@Bean
-    public ProcessEngine engine() {
-        return ProcessEngines.getDefaultProcessEngine();
-    }*/
 }

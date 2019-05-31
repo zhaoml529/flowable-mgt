@@ -8,7 +8,7 @@ import java.util.Date;
  * Created by zml on 2019/5/30.
  */
 @Data
-public class HistoricProcessInfo {
+public class HistoricProcessInstanceInfo {
 
     private Date startTime;
 
