@@ -50,14 +50,14 @@ public interface ProcessTaskService {
      * @param userId
      * @param taskId
      */
-    void claimTask(Long userId, String taskId);
+    Boolean claimTask(Long userId, String taskId);
 
     /**
      * 委派任务
      * @param userId
      * @param taskId
      */
-    void delegateTask(Long userId, String taskId);
+    Boolean delegateTask(Long userId, String taskId);
 
 
     /**
@@ -65,7 +65,7 @@ public interface ProcessTaskService {
      * @param userId
      * @param taskId
      */
-    void transferTask(Long userId, String taskId);
+    Boolean transferTask(Long userId, String taskId);
 
     /**
      * 完成任务
@@ -74,7 +74,7 @@ public interface ProcessTaskService {
      * @param userId
      * @param variables
      */
-    void completeTask(String taskId, String comment, Long userId, Map<String, Object> variables);
+    Boolean completeTask(String taskId, String comment, Long userId, Map<String, Object> variables);
 
     /**
      * 撤回任务
@@ -82,14 +82,14 @@ public interface ProcessTaskService {
      * @param processInstanceId
      * @return
      */
-    void revokeTask(String historyTaskId, String processInstanceId);
+    Boolean revokeTask(String historyTaskId, String processInstanceId);
 
     /**
      * 跳转（包括回退和向前）至指定活动节点
      * @param currentTaskId
      * @param targetTaskDefinitionKey
      */
-    void moveTo(String currentTaskId, String targetTaskDefinitionKey);
+    Boolean moveTo(String currentTaskId, String targetTaskDefinitionKey);
 
     /**
      * 根据processInstanceId查询评论信息

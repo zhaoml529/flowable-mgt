@@ -110,21 +110,24 @@ public class ProcessTaskServiceImpl implements ProcessTaskService {
     }
 
     @Override
-    public void claimTask(Long userId, String taskId) {
+    public Boolean claimTask(Long userId, String taskId) {
         if(Objects.isNull(userId) || StringUtils.isBlank(taskId)) {
-            return;
+            log.info("userId或taskId为空，参数: userId:{}, taskId:{}", userId, taskId);
+            throw new BizException("userId或taskId不能为空");
         }
         // 这个方法最终使用一个ThreadLocal类型的变量进行存储，也就是与当前的线程绑定，所以流程实例启动完毕之后，需要设置为null，防止多线程的时候出问题。
         Authentication.setAuthenticatedUserId(userId.toString());
         taskService.claim(taskId, userId.toString());
         Authentication.setAuthenticatedUserId(null);
         log.info("签收任务成功，userId:{}, taskId:{}", userId, taskId);
+        return Boolean.TRUE;
     }
 
     @Override
-    public void delegateTask(Long userId, String taskId) {
+    public Boolean delegateTask(Long userId, String taskId) {
         if(Objects.isNull(userId) || StringUtils.isBlank(taskId)) {
-            return;
+            log.info("userId或taskId为空，参数: userId:{}, taskId:{}", userId, taskId);
+            throw new BizException("userId或taskId不能为空");
         }
         // API: If no owner is set on the task, the owner is set to the current assignee of the task.
         // OWNER_（委托人）：受理人委托其他人操作该TASK的时候，受理人就成了委托人OWNER_，其他人就成了受理人ASSIGNEE_
@@ -132,25 +135,28 @@ public class ProcessTaskServiceImpl implements ProcessTaskService {
         // 一句话解释委派任务：你领导接到一个任务，让你代办，你办理完成后任务还是回归到你的领导，事情是你做的，功劳是你领导的；
         taskService.delegateTask(taskId, userId.toString());
         log.info("委派任务成功，userId:{}, taskId:{}", userId, taskId);
+        return Boolean.TRUE;
     }
 
     @Override
-    public void transferTask(Long userId, String taskId) {
+    public Boolean transferTask(Long userId, String taskId) {
         if(Objects.isNull(userId) || StringUtils.isBlank(taskId)) {
-            return;
+            log.info("userId或taskId为空，参数: userId:{}, taskId:{}", userId, taskId);
+            throw new BizException("userId或taskId不能为空");
         }
         Task task = getTaskById(taskId);
         if(Objects.isNull(task)) {
-            throw new BizException(ResponseCode.ERROR.code, "当前任务不存在");
+            throw new BizException("当前任务不存在");
         }
         String assign = task.getAssignee(); // 当前任务原受理人
         taskService.setAssignee(taskId, userId.toString()); // 给任务设置新的受理人
         taskService.setOwner(taskId, assign);// 设置当前任务的委托人
         log.info("签收任务成功，userId:{}, taskId:{}", userId, taskId);
+        return Boolean.TRUE;
     }
 
     @Override
-    public void completeTask(String taskId, String comment, Long userId, Map<String, Object> variables) {
+    public Boolean completeTask(String taskId, String comment, Long userId, Map<String, Object> variables) {
         if(Objects.isNull(taskId)) {
             throw new BizException("taskId不能为空");
         }
@@ -175,10 +181,11 @@ public class ProcessTaskServiceImpl implements ProcessTaskService {
         }
         // 正常完成任务
         taskService.complete(taskId, variables);
+        return Boolean.TRUE;
     }
 
     @Override
-    public void revokeTask(String historyTaskId, String processInstanceId) {
+    public Boolean revokeTask(String historyTaskId, String processInstanceId) {
         Task oldTask = getTaskById(historyTaskId);
         Task currentTask = getTaskByProcessInstanceId(processInstanceId);
         if(Objects.isNull(currentTask)) {
@@ -190,10 +197,11 @@ public class ProcessTaskServiceImpl implements ProcessTaskService {
                 .processInstanceId(processInstanceId)
                 .moveActivityIdTo(currentActivityId, oldActivityId)
                 .changeState();
+        return Boolean.TRUE;
     }
 
     @Override
-    public void moveTo(String currentTaskId, String targetTaskDefinitionKey) {
+    public Boolean moveTo(String currentTaskId, String targetTaskDefinitionKey) {
         Task task = getTaskById(currentTaskId);
         if(Objects.isNull(task)) {
             throw new BizException("当前任务不存在");
@@ -205,6 +213,7 @@ public class ProcessTaskServiceImpl implements ProcessTaskService {
                 .processInstanceId(task.getProcessInstanceId())
                 .moveActivityIdTo(task.getTaskDefinitionKey(), targetTaskDefinitionKey)
                 .changeState();
+        return Boolean.TRUE;
     }
 
     @Override

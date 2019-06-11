@@ -10,6 +10,7 @@ import com.vk.flowable.mgt.service.ProcessInfoService;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
 import org.flowable.bpmn.model.BpmnModel;
+import org.flowable.bpmn.model.Process;
 import org.flowable.engine.*;
 import org.flowable.engine.history.HistoricProcessInstance;
 import org.flowable.engine.history.HistoricProcessInstanceQuery;
@@ -94,6 +95,8 @@ public class ProcessInfoServiceImpl implements ProcessInfoService {
         ProcessEngineConfiguration engconf = processEngine.getProcessEngineConfiguration();
         ProcessInstance processInstance = runtimeService.createProcessInstanceQuery().processInstanceId(processInstanceId).singleResult();
         BpmnModel bpmnModel = repositoryService.getBpmnModel(processInstance.getProcessDefinitionId());
+//        List<Process> processes = bpmnModel.getProcesses();
+//        processes.get(0).getFlowElement()
         InputStream inputStream = processDiagramGenerator.generateDiagram(bpmnModel, "png", activityIds, Lists.newArrayList(), engconf.getActivityFontName(), engconf.getLabelFontName(), engconf.getAnnotationFontName(), engconf.getClassLoader(), 1.0, false);
         return inputStream;
     }

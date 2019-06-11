@@ -10,7 +10,20 @@ import java.util.List;
  */
 public interface ProcessTaskRpcService {
 
+    /**
+     * 分页查询用户待办任务列表
+     * @param userId
+     * @param limit
+     * @param offset
+     * @return
+     */
     ApiResponse<List<ProcessTaskDTO>> findTodoTask(Long userId, Integer limit, Integer offset);
 
+    /**
+     * 签收任务
+     * @param userId
+     * @param taskId
+     * @return
+     */
     ApiResponse claimTask(Long userId, String taskId);
 }
