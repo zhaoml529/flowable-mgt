@@ -178,6 +178,7 @@ public class ProcessTaskServiceImpl implements ProcessTaskService {
         if(Objects.equals(task.getDelegationState(), DelegationState.PENDING)) {
             // 完成委派任务
             taskService.resolveTask(taskId, variables);
+            return Boolean.TRUE;
         }
         // 正常完成任务
         taskService.complete(taskId, variables);

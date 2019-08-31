@@ -13,6 +13,9 @@ public enum ResponseCode {
 
     // 任务相关错误码10开头,编号001递增
     TASK_CLAIM_FAILED("10001", "任务签收失败"),
+    TASK_DELEGATE_FAILED("10002", "任务委派失败"),
+    TASK_TRANSFER_FAILED("10003", "任务转办失败"),
+    TASK_COMPLETE_FAILED("10004", "任务完成失败"),
     ;
 
     public final String code;

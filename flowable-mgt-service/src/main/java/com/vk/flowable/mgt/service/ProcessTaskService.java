@@ -54,11 +54,12 @@ public interface ProcessTaskService {
 
     /**
      * 委派任务
+     * 委派也是代办、协办，你领导接到一个任务，让你代办，你办理完成后任务还是回归到你的领导，事情是你做的，功劳是你领导的，这就是代办。
+     * 所以代办人完成任务后，任务还会回到原执行人，流程不会发生变化。
      * @param userId
      * @param taskId
      */
     Boolean delegateTask(Long userId, String taskId);
-
 
     /**
      * 转办任务
@@ -66,6 +67,7 @@ public interface ProcessTaskService {
      * @param taskId
      */
     Boolean transferTask(Long userId, String taskId);
+
 
     /**
      * 完成任务
