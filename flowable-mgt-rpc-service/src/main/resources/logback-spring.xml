@@ -2,7 +2,7 @@
 <configuration>
     <property name="out.pattern" value="%d{yyyy-MM-dd HH:mm:ss.SSS} [%-5p] [logId:%X{logId}] [%t] [%c][%L] - %.-10000msg%n"/>
 
-    <property name="projectName" value="oh-card-rpc-service"/>
+    <property name="projectName" value="flowable-mgt-service"/>
     <springProperty scope="context" name="logLevel" source="log.level"/>
     <springProperty scope="context" name="logPath" source="log.path"/>
     <!--<property resource="log.properties" />-->
@@ -43,41 +43,7 @@
         </encoder>
     </appender>
 
-    <appender name="CANCEL_ORDER_FILE" class="ch.qos.logback.core.rolling.RollingFileAppender">
-        <file>${logPath}/cancel_order.log</file>
-        <rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
-            <fileNamePattern>${logPath}/cancel_order.log.%d{yyyy-MM-dd}</fileNamePattern>
-            <MaxHistory>${maxHistory}</MaxHistory>
-        </rollingPolicy>
-        <encoder class="ch.qos.logback.classic.encoder.PatternLayoutEncoder">
-            <pattern>${out.pattern}</pattern>
-            <charset>UTF-8</charset> <!-- 此处设置字符集 -->
-        </encoder>
-    </appender>
-
-    <logger name="CANCEL_ORDER" level="${logLevel}" additivity="false" >
-        <appender-ref ref="CANCEL_ORDER_FILE"/>
-    </logger>
-
-    <appender name="EXPIRE_TASK_FILE" class="ch.qos.logback.core.rolling.RollingFileAppender">
-        <file>${logPath}/expire_task.log</file>
-        <rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
-            <fileNamePattern>${logPath}/expire_task.log.%d{yyyy-MM-dd}</fileNamePattern>
-            <MaxHistory>${maxHistory}</MaxHistory>
-        </rollingPolicy>
-        <encoder class="ch.qos.logback.classic.encoder.PatternLayoutEncoder">
-            <pattern>${out.pattern}</pattern>
-            <charset>UTF-8</charset> <!-- 此处设置字符集 -->
-        </encoder>
-    </appender>
-
-    <logger name="EXPIRE_TASK" level="${logLevel}" additivity="false" >
-        <appender-ref ref="EXPIRE_TASK_FILE"/>
-    </logger>
-    <logger name="com.xxl.job.core.thread.ExecutorRegistryThread" level="ERROR" />
-    <logger name="com.xxl.job.core.thread.TriggerCallbackThread" level="ERROR" />
-    <logger name="com.ourhours.card.mapper" level="INFO"/>
-    <logger name="com.ourhours" level="${logLevel}"/>
+    <logger name="com.vk" level="${logLevel}"/>
 
     <root level="INFO">    <!-- 根据实际情况修改日志级别，一般线上是INFO以上 -->
         <appender-ref ref="CONSOLE"/>

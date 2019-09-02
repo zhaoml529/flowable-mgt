@@ -22,8 +22,11 @@
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <springboot.version>1.5.7.RELEASE</springboot.version>
         <java.version>1.8</java.version>
-        <dubbo.version>2.5.3</dubbo.version>
-        <zkclient.version>0.3</zkclient.version>
+        <dubbo.version>2.7.3</dubbo.version>
+        <!--<zkclient.version>0.10</zkclient.version>-->
+        <!--curator中依赖的zookeeper的版本和zookeeper服务器的版本一致，否则报错：KeeperErrorCode = Unimplemented for /xxxx-->
+        <curator.version>4.2.0</curator.version>
+        <zookeeper.version>3.4.6</zookeeper.version>
         <guava.version>23.0</guava.version>
         <fastjson.version>1.2.38</fastjson.version>
         <druid.version>1.1.3</druid.version>
@@ -50,18 +53,14 @@
                 <scope>import</scope>
             </dependency>
             <!-- dubbo begin -->
+            <!-- https://mvnrepository.com/artifact/org.apache.dubbo/dubbo -->
             <dependency>
-                <groupId>com.alibaba</groupId>
+                <groupId>org.apache.dubbo</groupId>
                 <artifactId>dubbo</artifactId>
                 <version>${dubbo.version}</version>
-                <exclusions>
-                    <exclusion>
-                        <groupId>org.springframework</groupId>
-                        <artifactId>spring</artifactId>
-                    </exclusion>
-                </exclusions>
             </dependency>
-            <dependency>
+
+            <!--<dependency>
                 <groupId>com.101tec</groupId>
                 <artifactId>zkclient</artifactId>
                 <version>${zkclient.version}</version>
@@ -71,7 +70,36 @@
                         <artifactId>log4j</artifactId>
                     </exclusion>
                 </exclusions>
+            </dependency>-->
+            <!--Dubbo 支持 zkclient 和 curator 两种 Zookeeper 客户端实现：在2.7.x的版本中已经移除了zkclient的实现,如果要使用zkclient客户端,需要自行拓展-->
+            <dependency>
+                <groupId>org.apache.curator</groupId>
+                <artifactId>curator-recipes</artifactId>
+                <version>${curator.version}</version>
+                <exclusions>
+                    <exclusion>
+                        <groupId>org.apache.zookeeper</groupId>
+                        <artifactId>zookeeper</artifactId>
+                    </exclusion>
+                </exclusions>
             </dependency>
+
+            <dependency>
+                <groupId>org.apache.zookeeper</groupId>
+                <artifactId>zookeeper</artifactId>
+                <version>${zookeeper.version}</version>
+                <exclusions>
+                    <exclusion>
+                        <artifactId>slf4j-api</artifactId>
+                        <groupId>org.slf4j</groupId>
+                    </exclusion>
+                    <exclusion>
+                        <artifactId>slf4j-log4j12</artifactId>
+                        <groupId>org.slf4j</groupId>
+                    </exclusion>
+                </exclusions>
+            </dependency>
+
             <!-- dubbo end -->
             <dependency>
                 <groupId>org.projectlombok</groupId>
@@ -127,20 +155,15 @@
     </dependencyManagement>
 
     <build>
-        <plugins>
-            <plugin>
-                <groupId>org.springframework.boot</groupId>
-                <artifactId>spring-boot-maven-plugin</artifactId>
-                <version>${springboot.version}</version>
-                <executions>
-                    <execution>
-                        <goals>
-                            <goal>repackage</goal>
-                        </goals>
-                    </execution>
-                </executions>
-            </plugin>
-        </plugins>
+        <pluginManagement>
+            <plugins>
+                <plugin>
+                    <groupId>org.springframework.boot</groupId>
+                    <artifactId>spring-boot-maven-plugin</artifactId>
+                    <version>${springboot.version}</version>
+                </plugin>
+            </plugins>
+        </pluginManagement>
     </build>
 
 
