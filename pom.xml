@@ -22,7 +22,7 @@
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <springboot.version>1.5.7.RELEASE</springboot.version>
         <java.version>1.8</java.version>
-        <dubbo.version>2.7.3</dubbo.version>
+        <dubbo.version>2.7.15</dubbo.version>
         <!--<zkclient.version>0.10</zkclient.version>-->
         <!--curator中依赖的zookeeper的版本和zookeeper服务器的版本一致，否则报错：KeeperErrorCode = Unimplemented for /xxxx-->
         <curator.version>4.2.0</curator.version>
